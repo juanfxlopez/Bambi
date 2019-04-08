@@ -1,11 +1,11 @@
 #!bin/bash
-!YELLOW='\033[1;33m'
-!NC='\033[0m'
+#!YELLOW='\033[1;33m'
+#!NC='\033[0m'
 
 !mkdir ../data
 !cd ../data
 
-!# Training Set
+# Training Set
 !echo -e "${YELLOW} Downloading Training Data"
 !echo -e "${NC}"
 !wget https://data.broadinstitute.org/bbbc/BBBC038/stage1_train.zip
