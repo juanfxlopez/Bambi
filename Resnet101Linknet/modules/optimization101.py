@@ -19,7 +19,7 @@ nr_epochs = 50
 momentum = 0.95
 lr_rate = 0.03
 milestones = [5, 7, 8, 10, 12, 14, 16, 17, 18]
-img_size = 256
+img_size = 128
 gamma = 0.5
 
 use_cuda = torch.cuda.is_available()
