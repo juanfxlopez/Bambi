@@ -6,18 +6,18 @@
 !cd ../data
 
 # Training Set
-!echo -e "${YELLOW} Downloading Training Data"
-!echo -e "${NC}"
+#!echo -e "${YELLOW} Downloading Training Data"
+#!echo -e "${NC}"
 !wget https://data.broadinstitute.org/bbbc/BBBC038/stage1_train.zip
 !wget https://data.broadinstitute.org/bbbc/BBBC038/stage1_train_labels.csv
 
-!echo -e "${YELLOW} Downloading Test Data part 1"
-!echo -e "${NC}"
+#!echo -e "${YELLOW} Downloading Test Data part 1"
+#!echo -e "${NC}"
 !wget https://data.broadinstitute.org/bbbc/BBBC038/stage1_test.zip
 !wget https://data.broadinstitute.org/bbbc/BBBC038/stage1_solution.csv
 
-!echo -e "${YELLOW} Downloading Test Data part 2"
-!echo -e "${NC}"
+#!echo -e "${YELLOW} Downloading Test Data part 2"
+#!echo -e "${NC}"
 !wget https://data.broadinstitute.org/bbbc/BBBC038/stage2_test_final.zip
 !wget https://data.broadinstitute.org/bbbc/BBBC038/stage2_solution_final.csv
 
@@ -36,7 +36,7 @@
 !rm stage1_train.zip
 !cd ../modules
 
-!echo -e "${YELLOW} Making the data now.."
-!echo -e "${NC}"
+#!echo -e "${YELLOW} Making the data now.."
+#!echo -e "${NC}"
 !python3 make_data.py
 !python3 get_data_ids.py
