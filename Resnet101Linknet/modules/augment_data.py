@@ -35,3 +35,56 @@ for i in tqdm(range(len(rotations)), total=len(rotations)):
         new_label.save("../data/GenData/TrainData/labels/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
         new_inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
 print("Finished augmentations for rotations and cropping..")
+
+
+# Blur                          = 5
+blur = [ iaa.GaussianBlur(sigma=0.9),
+    iaa.GaussianBlur(sigma=2.9),
+    iaa.AverageBlur(k=7),
+    iaa.AverageBlur(k=9),
+    iaa.MedianBlur(k=7),
+]
+
+for i in tqdm(range(len(blur)), total=len(blur)):
+    for j, sample in tqdm(enumerate(data), total=len(data)):
+        img, label,inter = sample
+        new_img = blur[i].augment_image(img)
+        new_img = Image.fromarray(new_img)
+        label = Image.fromarray(label)
+        inter = Image.fromarray(inter)
+        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
+        label.save("../data/GenData/TrainData/labels/"+ str("%04d" % j) + "_blur_" + str(i) + "_.png")
+        inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
+print("Finished augmentations for blurring..")
+
+# Miscelaneous                  = 4
+misc = [ iaa.AdditiveGaussianNoise(scale=0.2*255),
+    iaa.AdditiveGaussianNoise(scale=0.05*255),
+    iaa.Sharpen(alpha=0.6, lightness=0.75),
+    iaa.Sharpen(alpha=1.0, lightness=0.75),
+]
+
+for i in tqdm(range(len(misc)), total=len(misc)):
+    for j, sample in tqdm(enumerate(data), total=len(data)):
+        img, label,inter = sample
+        new_img = misc[i].augment_image(img)
+        new_img = Image.fromarray(new_img)
+        label = Image.fromarray(label)
+        inter = Image.fromarray(inter)  
+        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
+        label.save("../data/GenData/TrainData/labels/"+ str("%04d" % j) + "_sharp_" + str(i) + "_.png")
+        inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
+print("Finished augmentations for miscalleneous..")
+
+# Adjusting exposure            = 1
+print("Adjusting Exposure..")
+for j, sample, inter in tqdm(enumerate(data), total=len(data)):
+    img, label,inter = sample
+    new_img = exposure.adjust_gamma(img, gamma=0.4, gain=0.9)
+    new_img = Image.fromarray(new_img)
+    label = Image.fromarray(label)
+    inter = Image.fromarray(inter)
+    new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_exposure_.png")
+    label.save("../data/GenData/TrainData/labels/" + str("%04d" % j) + "_exposure_.png")
+    inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_exposure_.png")
+print("Finished..")
