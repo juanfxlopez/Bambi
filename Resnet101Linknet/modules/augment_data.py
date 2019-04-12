@@ -78,7 +78,7 @@ print("Finished augmentations for miscalleneous..")
 
 # Adjusting exposure            = 1
 print("Adjusting Exposure..")
-for j, sample, inter in tqdm(enumerate(data), total=len(data)):
+for j, sample in tqdm(enumerate(data), total=len(data)):
     img, label,inter = sample
     new_img = exposure.adjust_gamma(img, gamma=0.4, gain=0.9)
     new_img = Image.fromarray(new_img)
