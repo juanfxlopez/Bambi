@@ -19,7 +19,7 @@ nr_epochs = 50
 momentum = 0.95
 lr_rate = 0.03
 milestones = [5, 7, 8, 10, 12, 14, 16, 17, 18]
-img_size = 128
+img_size = 384
 gamma = 0.5
 
 use_cuda = torch.cuda.is_available()
@@ -36,7 +36,7 @@ optimizer= optim.Adam(segm_model.parameters(), lr = 0.0001)
 criterion = nn.BCEWithLogitsLoss().cuda() if use_cuda else nn.BCEWithLogitsLoss()
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
 
-train_loader, valid_loader = CellTrainValidLoader(data_transform=transforms.Compose(mul_transf), batch_sz=batch_size, workers=0)
+train_loader, valid_loader = CellTrainValidLoader(data_transform=transforms.Compose(mul_transf), batch_sz=batch_size, workers=2)
 
 dict_loaders = {"train":train_loader, "valid":valid_loader}
 

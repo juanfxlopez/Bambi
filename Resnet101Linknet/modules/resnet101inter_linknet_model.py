@@ -39,33 +39,34 @@ class Resnet101SegmModel(nn.Module):
         modules = list(net_model.children())[:-1]
         encoder=nn.Sequential(*modules)
         self.layer1 = nn.Sequential(
-            nn.Conv2d(in_channels = input_channels, out_channels=64, kernel_size=3, stride=2, padding=1, bias=False), # torch.Size([1, 64, 224, 224])
-            nn.GroupNorm(num_groups=16, num_channels=64), #starting with image size: 128x128
-            nn.CELU(inplace=True), #torch.Size([1, 64, 256, 256])
-            encoder[3] #torch.Size([1, 64, 64, 64])
+            nn.Conv2d(in_channels = input_channels, out_channels=64, kernel_size=3, stride=2, padding=1, bias=False), # torch.Size([1, 64, 384, 384])
+            nn.GroupNorm(num_groups=16, num_channels=64), #starting with image size: 384x384
+            nn.CELU(inplace=True), #torch.Size([1, 64, 384, 384])
+            encoder[3] #torch.Size([1, 64, 96, 96])
         )                             
-        self.layer2 = encoder[4]#torch.Size([1, 256, 64, 64]) 
-        self.layer3 = encoder[5]#torch.Size([1, 512, 32, 32]) -> torch.Size([1, 512+x, 32, 32])   
-        self.layer4 = encoder[6]#torch.Size([1, 1024, 16, 16]) -> torch.Size([1, 1024+x, 16, 16])  
-        self.layer5 = encoder[7]#torch.Size([1, 2048, 8, 8])-> torch.Size([1, 2048, 8, 8])
-        self.layer6 = encoder[8]#torch.Size([1, 2048, 2, 2)
+        self.layer2 = encoder[4]#torch.Size([1, 256, 96, 96]) 
+        self.layer3 = encoder[5]#torch.Size([1, 512, 48, 48]) -> torch.Size([1, 512+x, 48, 48])   
+        self.layer4 = encoder[6]#torch.Size([1, 1024, 24, 24]) -> torch.Size([1, 1024+x, 24, 24])  
+        self.layer5 = encoder[7]#torch.Size([1, 2048, 12, 12])-> torch.Size([1, 2048, 12, 12])
+        #self.layer6 = encoder[8]#torch.Size([1, 2048, 6, 6)  ,, used for  image with original size =256
+        self.layer6 = nn.AvgPool2d(kernel_size=7, stride=2, padding=0)#torch.Size([1, 2048, 3, 3) for image with original size =384
 
         self.dec6 = nn.Sequential (
-            UpsampleLayer(in_chnl=2048, mid_chnl=num_filters*8, out_chnl=num_filters*8),  # dec([1, 2048, 2, 2]) -> ([1, 2048, 4, 4])
-            UpsampleLayer(in_chnl=256, mid_chnl=num_filters*8, out_chnl=num_filters*8)  # dec([1, 2048, 4, 4]) -> ([1, 2048, 8, 8])
+            UpsampleLayer(in_chnl=2048, mid_chnl=num_filters*8, out_chnl=num_filters*8),  # dec([1, 2048, 3, 3]) -> ([1, 2048, 6, 6])
+            UpsampleLayer(in_chnl=256, mid_chnl=num_filters*8, out_chnl=num_filters*8)  # dec([1, 2048, 6, 6]) -> ([1, 2048, 12, 12])
         )
-        self.dec5 = UpsampleLayer(2048 + num_filters*8, num_filters*8, num_filters*8)#dec6([1,2048 + 256,8,8]) = ([1,256,16,16])
-        self.dec4 = UpsampleLayer(1024 + num_filters*8, num_filters*8, num_filters*8)#dec6([1,1024 + 256,16,16]) = ([1,256,32,32])
-        self.dec3 = UpsampleLayer(512 + num_filters*8, num_filters*8, num_filters*8)#dec4([1,512 + 256,32,32]) = ([1,256,64,64])
+        self.dec5 = UpsampleLayer(2048 + num_filters*8, num_filters*8, num_filters*8)#dec6([1,2048 + 256,12,12]) = ([1,256,24,24])
+        self.dec4 = UpsampleLayer(1024 + num_filters*8, num_filters*8, num_filters*8)#dec6([1,1024 + 256,24,24]) = ([1,256,48,48])
+        self.dec3 = UpsampleLayer(512 + num_filters*8, num_filters*8, num_filters*8)#dec4([1,512 + 256,48,48]) = ([1,256,96,96])
         self.dec2 = nn.Sequential (
-                    ConvEluGrNorm(256 + num_filters*8, num_filters*8), #dec2([1,64 + 256,64,64]) = ([1,256,64,64])
-                    ConvEluGrNorm(num_filters*8, num_filters*2) #dec2([1,256,64,64]) = ([1,64,64,64])
+                    ConvEluGrNorm(256 + num_filters*8, num_filters*8), #dec2([1,64 + 256,96,96]) = ([1,256,96,96])
+                    ConvEluGrNorm(num_filters*8, num_filters*2) #dec2([1,256,96,96]) = ([1,64,96,96])
                 )
         self.dec1 =  nn.Sequential (
-                    UpsampleLayer(64 + num_filters*2, num_filters*2, num_filters*2),  #dec1([1,64 + 64,64,64]) = ([1,64,128,128])
-                    UpsampleLayer(num_filters*2, num_filters, num_filters)         #dec1([1,64 + 64,128,128]) = ([1,32,256,256])
+                    UpsampleLayer(64 + num_filters*2, num_filters*2, num_filters*2),  #dec1([1,64 + 64,96,96]) = ([1,64,192,192])
+                    UpsampleLayer(num_filters*2, num_filters, num_filters)         #dec1([1,64 + 64,192,192]) = ([1,32,384,384])
                 )
-        self.final = nn.Conv2d(num_filters, num_classes, kernel_size=1)  #conv2d([1,32,256,256])= ([1,1,256,256])
+        self.final = nn.Conv2d(num_filters, num_classes, kernel_size=1)  #conv2d([1,32,384,384])= ([1,1,384,384])
 
     def forward(self, x):
         conv1 = self.layer1(x)
