@@ -117,7 +117,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 print(labels.shape)
                 #preds=torch.FloatTensor(preds)
                 #print(preds.shape)
-                jaccard_acc += jaccard(labels, torch.sigmoid(preds))
+                jaccard_acc += jaccard(labels, preds)
                 #jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
                 #dice_acc += dice(labels, preds)
             
