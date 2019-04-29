@@ -7,7 +7,7 @@ from resnet101inter_linknet_model import ResNetLinkModel
 from helper import jaccard, dice, save_model, save_checkpoint, load_checkpoint
 from dataloader_inter import DatasetCells, CellTrainValidLoader
 #import encoding
-from parallel import DataParallelModel, DataParallelCriterion
+from encoding.parallel import DataParallelModel, DataParallelCriterion
 
 import time
 import copy
