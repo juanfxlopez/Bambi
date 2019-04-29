@@ -38,7 +38,7 @@ segm_model = ResNetLinkModel(input_channels=1, pretrained=True, num_classes=1)
 if torch.cuda.device_count() > 1:
   # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
   #segm_model = nn.DataParallel(segm_model)
-  segm_model = encoding.nn.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
+  segm_model = encoding.parallel.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
 print("Let's use", torch.cuda.device_count(), "GPUs!")
 segm_model.to(device)
 
@@ -52,7 +52,7 @@ mul_transf = [ transforms.Resize(size=(img_size, img_size)), transforms.ToTensor
 optimizer= optim.Adam(segm_model.parameters(), lr = 0.0001)
 #criterion = nn.BCEWithLogitsLoss().cuda() if use_cuda else nn.BCEWithLogitsLoss()
 criterion = nn.BCEWithLogitsLoss().to(device)
-criterion = encoding.nn.DataParallelCriterion(criterion, device_ids=[0,1,2,3,4,5,6,7])
+criterion = encoding.parallel.DataParallelCriterion(criterion, device_ids=[0,1,2,3,4,5,6,7])
 criterion.to(device)
 
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
