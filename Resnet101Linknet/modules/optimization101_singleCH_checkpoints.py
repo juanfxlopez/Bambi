@@ -7,7 +7,7 @@ from resnet101inter_linknet_model import ResNetLinkModel
 from helper import jaccard, dice, save_model, save_checkpoint, load_checkpoint
 from dataloader_inter import DatasetCells, CellTrainValidLoader
 #import encoding
-from parallel import DataParallelModel, DataParallelCriterion
+from encoding.parallel import DataParallelModel, DataParallelCriterion
 
 import time
 import copy
@@ -113,12 +113,12 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
-                jaccard_acc += jaccard(labels, preds)
+                #jaccard_acc += jaccard(labels, preds)
                 #jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
                 #dice_acc += dice(labels, preds)
             
             epoch_loss = running_loss / len(dataloaders[phase])
-           # aver_jaccard = jaccard_acc / len(dataloaders[phase])
+            #aver_jaccard = jaccard_acc / len(dataloaders[phase])
             #aver_jaccard_inter = jaccard_acc_inter / len(dataloaders[phase])
             #aver_dice = dice_acc / len(dataloaders[phase])
 
