@@ -107,7 +107,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                     #preds = torch.sigmoid(out) 
                     preds=out               
                     loss = criterion(preds, label_true)
-                    loss = loss.mean()
+                    #loss = loss.mean()
 
                     if phase == "train":
                         loss.backward()
