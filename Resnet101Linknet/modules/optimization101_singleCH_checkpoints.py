@@ -106,7 +106,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                     out = cust_model(input_img)
                     #preds = torch.sigmoid(out) 
                     preds=out 
-                    print(preds.shape)
+                    #print(preds.shape)
                     loss = criterion(preds, label_true)
                     loss = loss.mean()
 
@@ -115,7 +115,8 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
                 print(labels.shape)
-                print(preds.size())
+                preds=torch.FloatTensor(preds)
+                print(preds.shape)
                 jaccard_acc += jaccard(labels, preds)
                 #jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
                 #dice_acc += dice(labels, preds)
