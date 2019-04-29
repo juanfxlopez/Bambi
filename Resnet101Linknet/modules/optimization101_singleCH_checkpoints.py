@@ -2,7 +2,6 @@ import torch
 from torch import nn
 from torch import optim
 from torchvision import transforms
-#
 
 from resnet101inter_linknet_model import ResNetLinkModel
 from helper import jaccard, dice, save_model, save_checkpoint, load_checkpoint
@@ -37,9 +36,11 @@ segm_model = ResNetLinkModel(input_channels=1, pretrained=True, num_classes=1)
 
 if torch.cuda.device_count() > 1:
   # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
-  segm_model = nn.DataParallel(segm_model)
+  #segm_model = nn.DataParallel(segm_model)
+  segm_model = encoding.nn.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
 print("Let's use", torch.cuda.device_count(), "GPUs!")
 segm_model.to(device)
+
 
 '''if use_cuda:
     segm_model.cuda()
@@ -50,6 +51,9 @@ mul_transf = [ transforms.Resize(size=(img_size, img_size)), transforms.ToTensor
 optimizer= optim.Adam(segm_model.parameters(), lr = 0.0001)
 #criterion = nn.BCEWithLogitsLoss().cuda() if use_cuda else nn.BCEWithLogitsLoss()
 criterion = nn.BCEWithLogitsLoss().to(device)
+criterion = encoding.nn.DataParallelCriterion(criterion, device_ids=[0,1,2,3,4,5,6,7])
+criterion.to(device)
+
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
 
 train_loader, valid_loader = CellTrainValidLoader(data_transform=transforms.Compose(mul_transf), batch_sz=batch_size, workers=2)
@@ -81,7 +85,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 cust_model.eval()
             running_loss = 0.0
             jaccard_acc = 0.0
-            #jaccard_acc_inter = 0.0
+            jaccard_acc_inter = 0.0
             dice_loss = 0.0
 
             for input_img, labels, inter in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
@@ -114,7 +118,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
             #aver_jaccard_inter = jaccard_acc_inter / len(dataloaders[phase])
             #aver_dice = dice_acc / len(dataloaders[phase])
 
-            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | ".format(phase, epoch_loss, aver_jaccard))
+            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | Jaccard Average Acc inter: {:.4f} |".format(phase, epoch_loss, aver_jaccard))
             print("_"*15)
             if phase == "valid" and aver_jaccard > best_acc:
                 best_acc = aver_jaccard
