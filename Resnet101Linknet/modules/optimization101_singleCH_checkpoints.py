@@ -33,7 +33,7 @@ gamma = 0.5
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 #use_cuda = False
 
-segm_model = ResNetLinkModel(input_channels=1, pretrained=True, num_classes=2)
+segm_model = ResNetLinkModel(input_channels=1, pretrained=True, num_classes=1)
 
 if torch.cuda.device_count() > 1:
   # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
@@ -81,7 +81,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 cust_model.eval()
             running_loss = 0.0
             jaccard_acc = 0.0
-            jaccard_acc_inter = 0.0
+            #jaccard_acc_inter = 0.0
             dice_loss = 0.0
 
             for input_img, labels, inter in tqdm(dataloaders[phase], total=len(dataloaders[phase])):
@@ -90,9 +90,9 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 #inter = inter.cuda() if use_cuda else inter
                 input_img = input_img.to(device)
                 labels = labels.to(device)
-                inter = inter.to(device)
-                label_true=torch.cat([labels,inter], 1)
-                #label_true=inter
+                #inter = inter.to(device)
+                #label_true=torch.cat([labels,inter], 1)
+                label_true=labels
                 optimizer.zero_grad()
 
                 with torch.set_grad_enabled(phase == "train"):
@@ -106,19 +106,19 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
                 jaccard_acc += jaccard(labels, torch.sigmoid(preds))
-                jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
+                #jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
                 #dice_acc += dice(labels, preds)
             
             epoch_loss = running_loss / len(dataloaders[phase])
             aver_jaccard = jaccard_acc / len(dataloaders[phase])
-            aver_jaccard_inter = jaccard_acc_inter / len(dataloaders[phase])
+            #aver_jaccard_inter = jaccard_acc_inter / len(dataloaders[phase])
             #aver_dice = dice_acc / len(dataloaders[phase])
 
-            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | Jaccard Average Acc inter: {:.4f} |".format(phase, epoch_loss, aver_jaccard,aver_jaccard_inter))
+            print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | ".format(phase, epoch_loss, aver_jaccard))
             print("_"*15)
             if phase == "valid" and aver_jaccard > best_acc:
                 best_acc = aver_jaccard
-                best_acc_inter = aver_jaccard_inter
+                #best_acc_inter = aver_jaccard_inter
                 best_epoch_loss = epoch_loss
                 #best_model_wts = copy.deepcopy(cust_model.state_dict)
                 best_model_wts = copy.deepcopy(cust_model)
