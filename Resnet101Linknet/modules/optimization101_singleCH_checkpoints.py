@@ -52,7 +52,7 @@ mul_transf = [ transforms.Resize(size=(img_size, img_size)), transforms.ToTensor
 optimizer= optim.Adam(segm_model.parameters(), lr = 0.0001)
 #criterion = nn.BCEWithLogitsLoss().cuda() if use_cuda else nn.BCEWithLogitsLoss()
 criterion = nn.BCEWithLogitsLoss().to(device)
-criterion = encoding.parallel.DataParallelCriterion(criterion, device_ids=[0,1,2,3,4,5,6,7])
+#criterion = encoding.parallel.DataParallelCriterion(criterion, device_ids=[0,1,2,3,4,5,6,7])
 criterion.to(device)
 
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
