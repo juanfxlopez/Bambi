@@ -113,7 +113,9 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
-                jaccard_acc += jaccard(labels, preds.mean())
+                print(labels.shape())
+                print(preds.shape())
+                jaccard_acc += jaccard(labels, preds)
                 #jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
                 #dice_acc += dice(labels, preds)
             
