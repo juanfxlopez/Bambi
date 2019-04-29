@@ -97,9 +97,9 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 #inter = inter.cuda() if use_cuda else inter
                 input_img = input_img.to(device)
                 labels = labels.to(device)
-                #inter = inter.to(device)
-                #label_true=torch.cat([labels,inter], 1)
-                label_true=labels
+                inter = inter.to(device)
+                label_true=torch.cat([labels,inter], 1)
+                #label_true=labels
                 optimizer.zero_grad()
 
                 with torch.set_grad_enabled(phase == "train"):
