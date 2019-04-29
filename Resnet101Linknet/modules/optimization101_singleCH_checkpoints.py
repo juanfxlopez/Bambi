@@ -1,4 +1,3 @@
-import encoding.parallel
 import torch 
 from torch import nn
 from torch import optim
@@ -7,6 +6,7 @@ from torchvision import transforms
 from resnet101inter_linknet_model import ResNetLinkModel
 from helper import jaccard, dice, save_model, save_checkpoint, load_checkpoint
 from dataloader_inter import DatasetCells, CellTrainValidLoader
+from encoding import parallel
 
 import time
 import copy
@@ -38,7 +38,8 @@ segm_model = ResNetLinkModel(input_channels=1, pretrained=True, num_classes=1)
 if torch.cuda.device_count() > 1:
   # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
   #segm_model = nn.DataParallel(segm_model)
-  segm_model = encoding.parallel.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
+  #segm_model = encoding.parallel.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
+    segm_model = encoding.parallel.DataParallelModel(segm_model)
 print("Let's use", torch.cuda.device_count(), "GPUs!")
 segm_model.to(device)
 
