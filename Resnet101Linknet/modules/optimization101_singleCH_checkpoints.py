@@ -22,7 +22,7 @@ args = vars(ap.parse_args())
 
 use_cuda = torch.cuda.is_available()
 # Hyperparameters
-batch_size = 1
+batch_size = 8
 nr_epochs = 50
 momentum = 0.95
 lr_rate = 0.03
@@ -54,7 +54,7 @@ mul_transf = [ transforms.Resize(size=(img_size, img_size)), transforms.ToTensor
 optimizer= optim.Adam(segm_model.parameters(), lr = 0.0001)
 #criterion = nn.BCEWithLogitsLoss().cuda() if use_cuda else nn.BCEWithLogitsLoss()
 criterion = nn.BCEWithLogitsLoss()
-#criterion = DataParallelCriterion(criterion)
+criterion = DataParallelCriterion(criterion)
 criterion.to(device)
 
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
