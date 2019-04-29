@@ -22,7 +22,7 @@ args = vars(ap.parse_args())
 
 use_cuda = torch.cuda.is_available()
 # Hyperparameters
-batch_size = 16
+batch_size = 64
 nr_epochs = 20
 momentum = 0.95
 lr_rate = 0.03
