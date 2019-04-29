@@ -6,7 +6,8 @@ from torchvision import transforms
 from resnet101inter_linknet_model import ResNetLinkModel
 from helper import jaccard, dice, save_model, save_checkpoint, load_checkpoint
 from dataloader_inter import DatasetCells, CellTrainValidLoader
-import encoding
+#import encoding
+from parallel import DataParallelModel, DataParallelCriterion
 
 import time
 import copy
@@ -39,7 +40,7 @@ if torch.cuda.device_count() > 1:
   # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
   #segm_model = nn.DataParallel(segm_model)
   #segm_model = encoding.parallel.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
-    segm_model = encoding.parallel.DataParallelModel(segm_model)
+    segm_model = DataParallelModel(segm_model)
 print("Let's use", torch.cuda.device_count(), "GPUs!")
 segm_model.to(device)
 
@@ -52,8 +53,8 @@ mul_transf = [ transforms.Resize(size=(img_size, img_size)), transforms.ToTensor
 #optimizer = optim.SGD(segm_model.parameters(), lr=lr_rate, momentum=momentum)
 optimizer= optim.Adam(segm_model.parameters(), lr = 0.0001)
 #criterion = nn.BCEWithLogitsLoss().cuda() if use_cuda else nn.BCEWithLogitsLoss()
-criterion = nn.BCEWithLogitsLoss().to(device)
-#criterion = encoding.parallel.DataParallelCriterion(criterion, device_ids=[0,1,2,3,4,5,6,7])
+criterion = nn.BCEWithLogitsLoss()
+criterion = DataParallelCriterion(criterion)
 criterion.to(device)
 
 scheduler = optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
