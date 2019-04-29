@@ -107,13 +107,13 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                     #preds = torch.sigmoid(out) 
                     preds=out               
                     loss = criterion(preds, label_true)
-                    #loss = loss.mean()
+                    loss = loss.mean()
 
                     if phase == "train":
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
-               # jaccard_acc += jaccard(labels, torch.sigmoid(preds))
+                jaccard_acc += jaccard(labels, preds)
                 #jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
                 #dice_acc += dice(labels, preds)
             
