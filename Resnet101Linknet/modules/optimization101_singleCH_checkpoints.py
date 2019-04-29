@@ -22,7 +22,7 @@ args = vars(ap.parse_args())
 
 use_cuda = torch.cuda.is_available()
 # Hyperparameters
-batch_size = 80
+batch_size = 8
 nr_epochs = 50
 momentum = 0.95
 lr_rate = 0.03
@@ -37,9 +37,9 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 segm_model = ResNetLinkModel(input_channels=1, pretrained=True, num_classes=1)
 
 if torch.cuda.device_count() > 1:
-  # dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
-  #segm_model = nn.DataParallel(segm_model)
-  #segm_model = encoding.parallel.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
+     #dim = 0 [30, xxx] -> [10, ...], [10, ...], [10, ...] on 3 GPUs
+     #segm_model = nn.DataParallel(segm_model)
+     #segm_model = encoding.parallel.DataParallelModel(segm_model, device_ids=[0,1,2,3,4,5,6,7])
     segm_model = DataParallelModel(segm_model)
 print("Let's use", torch.cuda.device_count(), "GPUs!")
 segm_model.to(device)
@@ -116,7 +116,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 running_loss += loss.item() * input_img.size(0)
                 print(labels.shape)
                 #preds=torch.FloatTensor(preds)
-                #print(preds.shape)
+                print(preds)
                 jaccard_acc += jaccard(labels, preds)
                 #jaccard_acc_inter += jaccard(inter, torch.sigmoid(preds))
                 #dice_acc += dice(labels, preds)
