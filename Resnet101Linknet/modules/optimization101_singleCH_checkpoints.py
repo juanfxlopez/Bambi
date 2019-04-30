@@ -120,8 +120,8 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 preds=torch.cat(preds)
                 #print(preds.shape)
                 
-                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds.to('cpu')) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
-                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds.to('cpu'))
+                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds.to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
+                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds.to('cpu')))
                 #dice_acc += dice(labels, preds)
             
             epoch_loss = running_loss / len(dataloaders[phase])
