@@ -23,7 +23,7 @@ args = vars(ap.parse_args())
 use_cuda = torch.cuda.is_available()
 # Hyperparameters
 batch_size = 80
-nr_epochs = 2
+nr_epochs = 20
 momentum = 0.95
 lr_rate = 0.03
 milestones = [5, 7, 8, 10, 12, 14, 16, 17, 18]
@@ -143,7 +143,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
             if phase == "valid":
                 val_acc_history.append(aver_jaccard)
         print("^"*15)
-        #save_checkpoint(best_model_wts,best_optimizer_wts,epoch+1,best_epoch_loss,best_acc,best_acc_inter)
+        save_checkpoint(best_model_wts,best_optimizer_wts,epoch+1,best_epoch_loss,best_acc,best_acc_inter)
         print(" ")
         scheduler.step()
     time_elapsed = time.time() - start_time
@@ -154,4 +154,4 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizer, nr_epochs, scheduler=scheduler)
-save_model(segm_model, name="ResNet101inter_linknet_2.pt")
+save_model(segm_model, name="ResNet101inter_linknet_20.pt")
