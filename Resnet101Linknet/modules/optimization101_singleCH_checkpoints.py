@@ -114,11 +114,11 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
-                print(labels.shape)
+                #print(labels.shape)
                 #preds=torch.FloatTensor(preds)
                 #print(preds)
                 preds=torch.cat(preds)
-                print(preds.shape)
+                #print(preds.shape)
                 
                 jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds.to('cpu')) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
                 jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds.to('cpu'))
