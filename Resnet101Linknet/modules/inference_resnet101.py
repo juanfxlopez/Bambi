@@ -5,7 +5,6 @@ from torch import sigmoid
 from torchvision import transforms
 from torchvision import utils
 from torch import nn
-import drawContours
 
 import time
 from PIL import Image
@@ -15,7 +14,6 @@ from skimage.filters import threshold_otsu, threshold_adaptive
 from helper import load_model
 from resnet101inter_linknet_model import ResNetLinkModel
 from get_data_ids import get_ids_in_list
-import cv2
 
 
 start_time=time.time()
@@ -59,7 +57,6 @@ for img_id in tqdm(images, total=len(images)):
 
 
     binary_out2 = np.where(output_np2 > thrs, upper, lower)
-    #binary_out2 = output_np2 > thrs
     #binary_out = output_np
     #mask = Image.fromarray(binary_out)
     #mask.save(img_id + "_mask.png")
