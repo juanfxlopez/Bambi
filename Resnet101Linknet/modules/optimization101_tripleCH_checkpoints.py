@@ -119,7 +119,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 #print(labels.shape)
                 #preds=torch.FloatTensor(preds)
                 #print(preds)
-               #preds=torch.cat(preds) %more multiGPU
+                preds=torch.cat(preds) #more multiGPU
                 #print(preds.shape)
                 
                 jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds.to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
