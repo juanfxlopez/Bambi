@@ -1,7 +1,7 @@
 from os import listdir
 import pandas as pd
 
-def get_ids_in_csv(inputs, labels, inter, destination_name_inputs, destination_name_labels, destination_name_inter):
+def get_ids_in_csv(inputs, labels, inter, contour, destination_name_inputs, destination_name_labels, destination_name_inter,destination_name_contour):
     list_ids_train_input = [f for f in listdir(inputs)]
     list_ids_train_labels = [f for f in listdir(labels)]
     list_ids_train_inter = [f for f in listdir(inter)]
