@@ -50,21 +50,21 @@ class DatasetCells(Dataset):
           self.label_path = os.path.join(self.label_dir, file_id)# file id should be from label data, buit in this case is the same.
           self.inter_path = os.path.join(self.inter_dir, file_id)
           self.contour_path = os.path.join(self.contour_dir, file_id)
-          #image = io.imread(self.image_path)
-          #label = io.imread(self.label_path)
-          #inter = io.imread(self.inter_path)
-          #contour = io.imread(self.contour_path)
-          image = Image.open(self.image_path).convert("L")# L -> grayscale channel
-          label = Image.open(self.label_path)
-          inter = Image.open(self.inter_path)
-          contour = Image.open(self.contour_path)
+          image = io.imread(self.image_path)
+          label = io.imread(self.label_path)
+          inter = io.imread(self.inter_path)
+          contour = io.imread(self.contour_path)
+          #image = Image.open(self.image_path).convert("L")# L -> grayscale channel
+          #label = Image.open(self.label_path)
+          #inter = Image.open(self.inter_path)
+          #contour = Image.open(self.contour_path)
 
           
           if self.transform is not None:
               image = self.transform(image)
               label = self.transform(label)
-              inter = self.transform(inter)   
-              contour = self.transform(contour)      
+              inter = self.transform(inter)
+              contour = self.transform(contour)          
           return image, label, inter, contour
         if self.mode is "validation":
             pass
@@ -101,7 +101,7 @@ def CellTrainValidLoader(data_transform=None, validation_split=0.1, mode="train"
     contour_idxs = pd.read_csv("../data/GenData/train_contour_ids.csv")
     if data_transform is None:
         data_transform = transforms.ToTensor()
-    dataset = DatasetCells(file_idxs, label_idxs,inter_idxs,contour_idxs, transform=data_transform, mode="train")
+    dataset = DatasetCells(file_idxs, label_idxs,inter_idxs, contour_idxs, transform=data_transform, mode="train")
     
     shuffle_dataset = True
     random_seed = 1234
