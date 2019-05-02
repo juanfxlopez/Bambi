@@ -13,7 +13,7 @@ data = DatasetCells( pd.read_csv("../data/GenData/train_input_ids.csv"),
                 pd.read_csv("../data/GenData/train_contour_ids.csv"))
 
 # Rotations and crops           = 7
-rotations = [ iaa.Fliplr(1),
+'''rotations = [ iaa.Fliplr(1),
     iaa.Flipud(1),
     iaa.Affine(rotate=90),
     iaa.Affine(rotate=270),
@@ -82,7 +82,7 @@ for i in tqdm(range(len(misc)), total=len(misc)):
         label.save("../data/GenData/TrainData/labels/"+ str("%04d" % j) + "_sharp_" + str(i) + "_.png")
         inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
         contour.save("../data/GenData/TrainData/contours/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
-print("Finished augmentations for miscalleneous..")
+print("Finished augmentations for miscalleneous..")'''
 
 # Adjusting exposure            = 1
 print("Adjusting Exposure..")
@@ -96,5 +96,5 @@ for j, sample in tqdm(enumerate(data), total=len(data)):
     new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_exposure_.png")
     label.save("../data/GenData/TrainData/labels/" + str("%04d" % j) + "_exposure_.png")
     inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_exposure_.png")
-    contour.save("../data/GenData/TrainData/contours/" + str("%04d" % j) + "_exposure_png")
+    contour.save("../data/GenData/TrainData/contours/" + str("%04d" % j) + "_exposure_.png")
 print("Finished..")
