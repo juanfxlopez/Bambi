@@ -139,7 +139,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
             print("_"*15)
             if phase == "valid" and aver_jaccard > best_acc:
                 best_acc = aver_jaccard
-                best_acc_inter = aver_jaccard ## aver_jaccard_inter
+                best_acc_inter = aver_jaccard_inter ## aver_jaccard_inter
                 best_epoch_loss = epoch_loss
                 #best_model_wts = copy.deepcopy(cust_model.state_dict)
                 best_model_wts = copy.deepcopy(cust_model)
