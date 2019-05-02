@@ -87,7 +87,7 @@ for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
 
         mask2_plt=np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8, order='C')
         contours2,hierarchy = cv2.findContours(maskita, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        cv2.drawContours(mask2_plt,contours2, -1, (255,0,0), 1)
+        cv2.drawContours(mask2_plt,contours2, -1, (255,0,0), 2)
         #cv2.imshow('plt2', mask2_plt)
   
         
