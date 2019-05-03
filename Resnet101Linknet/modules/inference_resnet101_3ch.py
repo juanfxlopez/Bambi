@@ -18,9 +18,9 @@ from get_data_ids import get_ids_in_list
 
 start_time=time.time()
 
-segm_model=ResNetLinkModel(input_channels=1,num_classes=2)
-segm_model=nn.DataParallel(segm_model) #This is for multiGPU -> cloud
-segm_model=load_model(segm_model, model_dir="./ResNet101inter_linknet_i384_e20_b80_2ch_cloud.pt")## this is the best so far
+segm_model=ResNetLinkModel(input_channels=1,num_classes=3)
+#segm_model=nn.DataParallel(segm_model) #This is for multiGPU -> cloud
+segm_model=load_model(segm_model, model_dir="./ResNet101inter_linknet_i384_e250_w2_c2_3ch_local75.pt")
 
 img_size=384
 trf = transforms.Compose([ transforms.Resize(size=(img_size, img_size)), transforms.ToTensor() ])
@@ -43,6 +43,7 @@ for img_id in tqdm(images, total=len(images)):
     output = segm_model(img_in)
     output1= output[:,0,:,:]
     output2= output[:,1,:,:]
+    output3= output[:,2,:,:]
     pred = sigmoid(output)
     pred = pred.squeeze()
     output_np = pred.detach().cpu().numpy()
@@ -52,11 +53,15 @@ for img_id in tqdm(images, total=len(images)):
     pred2 = sigmoid(output2)
     pred2 = pred2.squeeze()
     output_np2 = pred2.detach().cpu().numpy()
+    pred3 = sigmoid(output3)
+    pred3 = pred3.squeeze()
+    output_np3 = pred3.detach().cpu().numpy()
     global_thresh = threshold_otsu(output_np)
     binary_out1 = output_np1 > global_thresh
 
 
     binary_out2 = np.where(output_np2 > thrs, upper, lower)
+    binary_out3 = np.where(output_np3 > thrs, upper, lower)
     #binary_out = output_np
     #mask = Image.fromarray(binary_out)
     #mask.save(img_id + "_mask.png")
@@ -67,6 +72,8 @@ for img_id in tqdm(images, total=len(images)):
     binary_out1.save(prediction_path + img_id[0:-4] + "mask.png")
     binary_out2 = Image.fromarray(np.uint8(binary_out2*255))
     binary_out2.save(prediction_path + img_id[0:-4] + "maskwater.png")
+    binary_out3 = Image.fromarray(np.uint8(binary_out3*255))
+    binary_out3.save(prediction_path + img_id[0:-4] + "maskcontour.png")
     substraction = Image.fromarray(np.uint8(substraction*255))
     substraction.save(prediction_path + img_id[0:-4] + "masksubs.png")
     #plt.imsave(prediction_path + img_id + "_mask.png", binary_out1)

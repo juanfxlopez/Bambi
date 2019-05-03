@@ -22,8 +22,8 @@ args = vars(ap.parse_args())
 
 use_cuda = torch.cuda.is_available()
 # Hyperparameters
-batch_size = 80
-nr_epochs = 20
+batch_size = 2
+nr_epochs = 250
 momentum = 0.95
 lr_rate = 0.03
 milestones = [5, 7, 8, 10, 12, 14, 16, 17, 18]
@@ -117,11 +117,11 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 #print(labels.shape)
                 #preds=torch.FloatTensor(preds)
                 #print(preds)
-                preds=torch.cat(preds)
+                #preds=torch.cat(preds)
                 #print(preds.shape)
                 
-                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds.to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
-                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds.to('cpu')))
+                jaccard_acc += jaccard(labels.to(device), torch.sigmoid(preds.to(device))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
+                jaccard_acc_inter += jaccard(inter.to(device), torch.sigmoid(preds.to(device)))
                 #dice_acc += dice(labels, preds)
             
             epoch_loss = running_loss / len(dataloaders[phase])
@@ -154,4 +154,4 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizer, nr_epochs, scheduler=scheduler)
-save_model(segm_model, name="ResNet101inter_linknet_20.pt")
+save_model(segm_model, name="ResNet101inter_linknet_384_250_2chlocal.pt")
