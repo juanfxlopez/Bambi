@@ -117,11 +117,11 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 #print(labels.shape)
                 #preds=torch.FloatTensor(preds)
                 #print(preds)
-                #preds=torch.cat(preds)
+                preds=torch.cat(preds) #for multiGPU
                 #print(preds.shape)
                 
-                jaccard_acc += jaccard(labels.to(device), torch.sigmoid(preds.to(device))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
-                jaccard_acc_inter += jaccard(inter.to(device), torch.sigmoid(preds.to(device)))
+                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds.to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
+                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds.to('cpu')))
                 #dice_acc += dice(labels, preds)
             
             epoch_loss = running_loss / len(dataloaders[phase])
@@ -154,4 +154,4 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizer, nr_epochs, scheduler=scheduler)
-save_model(segm_model, name="ResNet101inter_linknet_384_250_2chlocal.pt")
+save_model(segm_model, name="ResNet101inter_linknet_384_250_2ch_cloud.pt")
