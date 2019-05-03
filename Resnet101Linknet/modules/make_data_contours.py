@@ -71,7 +71,7 @@ for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
        
         #cv2.imshow('mask',mask)
         #cv2.imshow('mask_original',mask_original)
-        dst=cv2.addWeighted(mask, alpha, intermask, beta, 0.0)
+        #dst=cv2.addWeighted(mask, alpha, intermask, beta, 0.0)
 
         wtrshed = create_watershed(label(mask))
         plt.imsave("watershed.png", wtrshed)
@@ -94,21 +94,21 @@ for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
         #cv2.imshow('plt2', mask2_plt)
   
         
-        dst = cv2.addWeighted(dst, 1,watershed_, 0.6, 0.0)
+        #dst = cv2.addWeighted(dst, 1,watershed_, 0.6, 0.0)
         #cv2.imshow('dst',dst)
         #cv2.waitKey(0)
 
     
     mask_label = Image.fromarray(mask_original)
-    mask_labelinter = Image.fromarray(maskita)
-    mask_inter = Image.fromarray(intermask)
+    #mask_labelinter = Image.fromarray(maskita)
+    #mask_inter = Image.fromarray(intermask)
     mask_watershed=Image.fromarray(watershed_)
     mask_contours=Image.fromarray(mask2_plt)
-    mask_dst = Image.fromarray(dst)
+    #mask_dst = Image.fromarray(dst)
     
     mask_label.save("../data/GenData/TrainData/labels/" + str("%04d" % (n + 65)) + "_.png")
-    mask_labelinter.save("../data/GenData/TrainData/labels_inter/" + str("%04d" % (n + 65)) + "_.png")
+    #mask_labelinter.save("../data/GenData/TrainData/labels_inter/" + str("%04d" % (n + 65)) + "_.png")
     mask_watershed.save("../data/GenData/TrainData/watershed/" + str("%04d" % (n + 65)) + "_.png")
-    mask_inter.save("../data/GenData/TrainData/intersections/" + str("%04d" % (n + 65)) + "_.png")
+    #mask_inter.save("../data/GenData/TrainData/intersections/" + str("%04d" % (n + 65)) + "_.png")
     mask_contours.save("../data/GenData/TrainData/contours/" + str("%04d" % (n + 65)) + "_.png")
-    mask_dst.save("../data/GenData/TrainData/overlays/" + str("%04d" % (n + 65)) + "_.png")
+    #mask_dst.save("../data/GenData/TrainData/overlays/" + str("%04d" % (n + 65)) + "_.png")
