@@ -53,11 +53,11 @@ for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
         # Isolate largest contour
         #contour_sizes = [(cv2.contourArea(contour), contour) for contour in contours]
         #biggest_contour = max(contour_sizes, key=lambda x: x[0])[1]
-        cv2.drawContours(mask_plt,contours_, -1, (255,0,0), 5)
-        cv2.drawContours(mask2_plt,contours, -1, (255,0,0), 5)
+        cv2.drawContours(mask_plt,contours_, -1, (255,0,0), 10)
+        cv2.drawContours(mask2_plt,contours, -1, (255,0,0), 10)
 
-        #cv2.imshow('mask_plt', mask_plt)
-        #cv2.imshow('mask2_plt', mask2_plt)
+        cv2.imshow('mask_plt', mask_plt)
+        cv2.imshow('mask2_plt', mask2_plt)
 
 
         intermask_= cv2.bitwise_and(mask2_plt,mask_plt)
@@ -67,36 +67,36 @@ for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
         retval, mask= cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)
         #print(maskita.shape)
         intermask = np.maximum(intermask, intermask_)
-        #cv2.imshow('intermask',intermask)
+        cv2.imshow('intermask',intermask)
        
-        #cv2.imshow('mask',mask)
-        #cv2.imshow('mask_original',mask_original)
-        #dst=cv2.addWeighted(mask, alpha, intermask, beta, 0.0)
+        cv2.imshow('mask',mask)
+        cv2.imshow('mask_original',mask_original)
+        dst=cv2.addWeighted(mask, alpha, intermask, beta, 0.0)
 
         wtrshed = create_watershed(label(mask))
         plt.imsave("watershed.png", wtrshed)
         watershed_ = cv2.imread("watershed.png", cv2.IMREAD_GRAYSCALE)
         retval, watershed_ = cv2.threshold(watershed_, 200, 255, cv2.THRESH_BINARY)
-        #cv2.imshow('watershed',watershed_)
+        cv2.imshow('watershed',watershed_)
 
         '''contour2 = create_contour(label(mask_original))
         plt.imsave("contours_original.png", contour2)
         contours_original = cv2.imread("contours_original.png", cv2.IMREAD_GRAYSCALE)
         cv2.imshow('contour_original',contours_original)'''
 
-        maskita= mask - watershed_
+        maskita= mask_original - watershed_
         retval, maskita = cv2.threshold(maskita, 200, 255, cv2.THRESH_BINARY)
-        #cv2.imshow('maskita', maskita)
+        cv2.imshow('maskita', maskita)
 
         mask2_plt=np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8, order='C')
         contours2,hierarchy = cv2.findContours(maskita, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         cv2.drawContours(mask2_plt,contours2, -1, (255,0,0), 2)
-        #cv2.imshow('plt2', mask2_plt)
+        cv2.imshow('plt2', mask2_plt)
   
         
-        #dst = cv2.addWeighted(dst, 1,watershed_, 0.6, 0.0)
-        #cv2.imshow('dst',dst)
-        #cv2.waitKey(0)
+        dst = cv2.addWeighted(dst, 1,watershed_, 0.6, 0.0)
+        cv2.imshow('dst',dst)
+        cv2.waitKey(0)
 
     
     mask_label = Image.fromarray(mask_original)
