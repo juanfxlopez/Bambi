@@ -18,7 +18,7 @@ def create_watershed(labels):
     mask_wl = watershed(dilated, labels, mask=dilated, watershed_line=True)
     mask_wl[mask_wl > 0] = 1
     contours = dilated - mask_wl
-    contours = binary_dilation(contours, iterations=2)
+    contours = binary_dilation(contours, iterations=1)
     return contours
 
 TRAIN_PATH = "../data/DSB-Stage1/"
