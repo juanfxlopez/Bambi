@@ -37,7 +37,7 @@ for i in tqdm(range(len(rotations)), total=len(rotations)):
         new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
         new_label.save("../data/GenData/TrainData/labels/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
         new_inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
-        new_contour.save("../data/GenData/TrainData/contours/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
+        new_contour.save("../data/GenData/TrainData/labels_inter_inv/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
 print("Finished augmentations for rotations and cropping..")
 
 
@@ -60,7 +60,7 @@ for i in tqdm(range(len(blur)), total=len(blur)):
         new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
         label.save("../data/GenData/TrainData/labels/"+ str("%04d" % j) + "_blur_" + str(i) + "_.png")
         inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
-        contour.save("../data/GenData/TrainData/contours/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
+        contour.save("../data/GenData/TrainData/labels_inter_inv/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
 print("Finished augmentations for blurring..")
 
 # Miscelaneous                  = 4
@@ -81,7 +81,7 @@ for i in tqdm(range(len(misc)), total=len(misc)):
         new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
         label.save("../data/GenData/TrainData/labels/"+ str("%04d" % j) + "_sharp_" + str(i) + "_.png")
         inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
-        contour.save("../data/GenData/TrainData/contours/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
+        contour.save("../data/GenData/TrainData/labels_inter_inv/" + str("%04d" % j) + "_sharp_" + str(i) + "_.png")
 print("Finished augmentations for miscalleneous..")
 
 # Adjusting exposure            = 1
@@ -96,5 +96,5 @@ for j, sample in tqdm(enumerate(data), total=len(data)):
     new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j) + "_exposure_.png")
     label.save("../data/GenData/TrainData/labels/" + str("%04d" % j) + "_exposure_.png")
     inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_exposure_.png")
-    contour.save("../data/GenData/TrainData/contours/" + str("%04d" % j) + "_exposure_.png")
+    contour.save("../data/GenData/TrainData/labels_inter_inv/" + str("%04d" % j) + "_exposure_.png")
 print("Finished..")
