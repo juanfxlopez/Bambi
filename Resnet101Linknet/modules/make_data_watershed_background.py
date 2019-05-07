@@ -22,7 +22,7 @@ def create_watershed(labels):
     contours = binary_dilation(contours, iterations=1)
     return contours
 
-TRAIN_PATH = "../data/DSB-Stage1/"
+TRAIN_PATH = "../data/DSB-Stage1-fixed/"
 #TEST_PATH = "../"
 
 train_ids = next(os.walk(TRAIN_PATH))[1]
