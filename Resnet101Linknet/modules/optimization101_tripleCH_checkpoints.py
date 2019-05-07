@@ -159,4 +159,4 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizer, nr_epochs, scheduler=scheduler)
-save_model(segm_model, name="ResNet101inter_linknet_i384_e20_w1_c2_3ch_cloud.pt")
+save_model(segm_model, name="ResNet101inter_linknet_i384_e20_w1_bckg_3ch_cloud.pt")
