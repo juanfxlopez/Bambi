@@ -22,7 +22,7 @@ def create_watershed(labels):
     contours = binary_dilation(contours, iterations=1)
     return contours
 
-TRAIN_PATH = "../data/DSB-Stage1-test/"
+TRAIN_PATH = "../data/DSB-Stage1-fixed/"
 #TEST_PATH = "../"
 
 train_ids = next(os.walk(TRAIN_PATH))[1]
@@ -38,7 +38,7 @@ for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
     #img = cv2.imread(path + "/images/" + id_ + ".png", cv2.IMREAD_UNCHANGED)
     img = cv2.imread(path + "/images/" + id_ + ".png") # in BGR by default
     im = Image.fromarray(img)
-    im.save("../data/GenData/TrainData/images/" + str("%04d" % (n + 729)) + "_.png")
+    im.save("../data/GenData/TrainData/images/" + str("%04d" % (n + 65)) + "_.png")
     
     mask = np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8, order='C')
     mask_original = np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8, order='C')
