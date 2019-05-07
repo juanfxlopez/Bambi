@@ -36,7 +36,7 @@ beta= 1.0- alpha
 for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
     path = TRAIN_PATH+id_
     #img = cv2.imread(path + "/images/" + id_ + ".png", cv2.IMREAD_UNCHANGED)
-    img = cv2.imread(path + "/images/" + id_ + ".png") # in BGR by default
+    img = cv2.imread(path + "/images/" + id_ + "_.png") # in BGR by default
     im = Image.fromarray(img)
     im.save("../data/GenData/TrainData/images/" + str("%04d" % (n + 794)) + "_.png")
     
