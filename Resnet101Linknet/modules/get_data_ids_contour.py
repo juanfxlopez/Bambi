@@ -33,5 +33,5 @@ def get_ids_in_list(inputs):
     return label_list
 
 
-get_ids_in_csv("../data/GenData/TrainData/images/", "../data/GenData/TrainData/labels/", "../data/GenData/TrainData/watershed/", "../data/GenData/TrainData/labels_inter_inv/", 
+get_ids_in_csv("../data/GenData/TrainData/images/", "../data/GenData/TrainData/labels_inter/", "../data/GenData/TrainData/watershed/", "../data/GenData/TrainData/labels/", 
             "../data/GenData/train_input_ids.csv", "../data/GenData/train_labels_ids.csv", "../data/GenData/train_inter_ids.csv","../data/GenData/train_contour_ids.csv")

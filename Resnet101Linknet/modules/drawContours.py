@@ -1,7 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from skimage import io, measure, feature, filters
-from PIL import Image
+from PIL import Image, ImageFont, ImageDraw
 import cv2
 import random
 
@@ -13,6 +13,7 @@ def cellCount_DrawContours(origImgFilename, procImgFilename, savedImgFilename):
     print(origImg.shape)
     #processedImg = io.imread(procImgFilename)
     processedImg = cv2.imread(procImgFilename, cv2.IMREAD_UNCHANGED)
+    retval, processedImg = cv2.threshold(processedImg, 200, 255, cv2.THRESH_BINARY)
     print(processedImg.shape)
     #img = filters.gaussian(processedImg, 3)
     img=processedImg
@@ -36,7 +37,7 @@ def cellCount_DrawContours(origImgFilename, procImgFilename, savedImgFilename):
     for count,value in enumerate(contours_):
         #cnt = contours_[i]
         random_color = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
-        cv2.drawContours(binImg_plt, [value], 0, random_color, 1)
+        cv2.drawContours(binImg_plt, [value], 0, random_color, 3)
         #cv2.drawContours(binImg_plt,contours_, 4, (255,0,0), 3)
     cellCount = len(contours_)# count + 1
     ret, mask = cv2.threshold(binImg_plt, 1, 255, cv2.THRESH_BINARY)
@@ -47,6 +48,11 @@ def cellCount_DrawContours(origImgFilename, procImgFilename, savedImgFilename):
     #binImg_im = Image.fromarray(binImg_plt)
     #binImg_im.save(savedImgFilename[0:-4] + "contours.png")
     conImg_im = Image.fromarray(conImg_plt)
+    draw = ImageDraw.Draw(conImg_im)
+    #font=ImageFont.load_default()
+    #font = ImageFont.load("arial.pil")
+    font = ImageFont.truetype(font="arial.ttf",size=40)
+    draw.text((50, 50),"Cell count: "+str(cellCount),(255,0,0),font=font)
     conImg_im.save(savedImgFilename)
 
     '''_, ax = plt.subplots()

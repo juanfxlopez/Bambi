@@ -51,9 +51,10 @@ def load_checkpoint(model,filepath):
     model.load_state_dict(checkpoint['state_dict'])
     optimizer = optim.Adam(model.parameters(), lr = 0.0001)
     optimizer.load_state_dict(checkpoint['optimizer'])
+    best_acc=checkpoint['aver_jaccard']
     phase='train'
     print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | Jaccard Average Acc inter: {:.4f} |".format(phase, checkpoint['epoch_loss'], checkpoint['aver_jaccard'],checkpoint['aver_jaccard_inter']))
     print("_"*15)
     #model.eval()
     #model.train()
-    return model,optimizer
+    return model,optimizer,best_acc

@@ -24,9 +24,9 @@ class DatasetCells(Dataset):
         self.mode = mode
         if self.mode is "train":
           self.data_dir = os.path.join(self.data_root, "TrainData/images/")
-          self.label_dir = os.path.join(self.data_root, "TrainData/labels/")
+          self.label_dir = os.path.join(self.data_root, "TrainData/labels_inter/")
           self.inter_dir = os.path.join(self.data_root, "TrainData/watershed/")
-          self.contour_dir = os.path.join(self.data_root, "TrainData/labels_inter_inv/")
+          self.contour_dir = os.path.join(self.data_root, "TrainData/labels/")
         elif self.mode is "validation":
             pass
         elif self.mode is "test":
