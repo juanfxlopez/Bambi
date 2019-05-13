@@ -22,12 +22,12 @@ args = vars(ap.parse_args())
 
 use_cuda = torch.cuda.is_available()
 # Hyperparameters
-batch_size = 80
-nr_epochs = 20
+batch_size = 40
+nr_epochs = 50
 momentum = 0.95
 lr_rate = 0.03
 milestones = [5, 7, 8, 10, 12, 14, 16, 17, 18]
-img_size = 384
+img_size = 512
 gamma = 0.5
 
 #use_cuda = torch.cuda.is_available()
@@ -76,7 +76,7 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     if (start_epoch >1):
         filepath= "./checkpoint_epoch" + str(args["lastepoch"]) + ".pth"
         #filepath="ResNet34watershedplus_linknet_50.pt"
-        cust_model, optimizer,best_acc = load_checkpoint(cust_model,filepath)
+        cust_model, optimizer,best_acc, best_epoch_loss = load_checkpoint(cust_model,filepath)
         best_model_wts = copy.deepcopy(cust_model)
         best_optimizer_wts = optim.Adam(best_model_wts.parameters(), lr = 0.0001)
         best_optimizer_wts.load_state_dict(optimizer.state_dict())
@@ -123,19 +123,21 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                 #preds=torch.FloatTensor(preds)
                 #print(preds)
                 preds=torch.cat(preds) #for multiGPU
-                #print(preds.shape)
+                #print(preds[:,0,:,:].reshape([batch_size,1,img_size,img_size]).shape)
+                #print(torch.sigmoid(preds).shape)
                 
-                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds.to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
-                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds.to('cpu')))
-                jaccard_acc_contour += jaccard(contours.to('cpu'), torch.sigmoid(preds.to('cpu')))
+                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds[:,0,:,:].reshape([batch_size,1,img_size,img_size]).to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
+                #print(jaccard_acc)
+                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds[:,1,:,:].reshape([batch_size,1,img_size,img_size]).to('cpu')))
+                jaccard_acc_contour += jaccard(contours.to('cpu'), torch.sigmoid(preds[:,2,:,:].reshape([batch_size,1,img_size,img_size]).to('cpu')))
 
                 #dice_acc += dice(labels, preds)
             
             epoch_loss = running_loss / len(dataloaders[phase])
             print("| {} Loss: {:.4f} |".format(phase, epoch_loss))
             aver_jaccard = jaccard_acc / len(dataloaders[phase])
-            #aver_jaccard_inter = jaccard_acc_inter / len(dataloaders[phase])
-            #aver_jaccard_contour = jaccard_acc_contour / len(dataloaders[phase])
+            aver_jaccard_inter = jaccard_acc_inter / len(dataloaders[phase])
+            aver_jaccard_contour = jaccard_acc_contour / len(dataloaders[phase])
             #aver_dice = dice_acc / len(dataloaders[phase])
             print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | ".format(phase, epoch_loss, aver_jaccard))
             print("| {} Loss: {:.4f} | Jaccard Average Acc: {:.4f} | Jaccard Average Acc inter: {:.4f}  | Jaccard Average Acc contour: {:.4f}| ".format(phase, epoch_loss, aver_jaccard, aver_jaccard_inter, aver_jaccard_contour))
@@ -162,4 +164,4 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizer, nr_epochs, scheduler=scheduler)
-save_model(segm_model, name="ResNet152inter_linknet_i384_e29_b80_w1_c0_3ch_intercloud80.pt")
+save_model(segm_model, name="ResNet152inter_linknet_i512_e50_b40_w2_resized_3ch_intercloud.pt")

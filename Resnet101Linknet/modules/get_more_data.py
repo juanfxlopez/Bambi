@@ -98,7 +98,7 @@ def create_masks(ImageId,masks_n,train_path):
                     single_mask_im.save(masks_path + ImageId +"_"+ str(n) + ".png")
                 elif (train_path=="../data/DSB-Stage2/"): 
                     im = Image.fromarray(img)
-                    im.save("../data/DSB-Stage2-fixed/" + ImageId + "/images/"  + ImageId + "_.png")
+                    im.save("../data/DSB-Stage2-fixed/" + ImageId + "/images/"  + ImageId + ".png")
                     single_mask_im.save("../data/DSB-Stage2-fixed/" + ImageId + "/masks/" + ImageId +"_"+ str(n) + ".png")
                 #single_mask_im.save(+ ImageId +"_"+ str(n) + ".png")
                 #cv2.imshow('single_mask',single_mask)
