@@ -119,18 +119,18 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
-                print(labels.size())
+                #print(list(labels.size())
                 #preds=torch.FloatTensor(preds)
                 #print(preds)
                 preds=torch.cat(preds) #for multiGPU
-                print(preds.shape)
-                print(preds[:,0,:,:].reshape([batch_size,1,img_size,img_size]).shape)
+                #print(preds.shape)
+                #print(preds[:,0,:,:].reshape([batch_size,1,img_size,img_size]).shape)
                 #print(torch.sigmoid(preds).shape)
                 
-                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds[:,0,:,:].reshape(labels.size()).to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
+                jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds[:,0,:,:].reshape(list(labels.size())).to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
                 #print(jaccard_acc)
-                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds[:,1,:,:].reshape(labels.size()).to('cpu')))
-                jaccard_acc_contour += jaccard(contours.to('cpu'), torch.sigmoid(preds[:,2,:,:].reshape(labels.size()).to('cpu')))
+                jaccard_acc_inter += jaccard(inter.to('cpu'), torch.sigmoid(preds[:,1,:,:].reshape(list(labels.size())).to('cpu')))
+                jaccard_acc_contour += jaccard(contours.to('cpu'), torch.sigmoid(preds[:,2,:,:].reshape(list(labels.size())).to('cpu')))
 
                 #dice_acc += dice(labels, preds)
             
