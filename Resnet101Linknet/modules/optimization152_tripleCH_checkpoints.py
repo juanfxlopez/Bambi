@@ -119,11 +119,12 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
                         loss.backward()
                         optimizer.step()
                 running_loss += loss.item() * input_img.size(0)
-                #print(labels.shape)
+                print(labels.shape)
                 #preds=torch.FloatTensor(preds)
                 #print(preds)
                 preds=torch.cat(preds) #for multiGPU
-                #print(preds[:,0,:,:].reshape([batch_size,1,img_size,img_size]).shape)
+                print(preds.shape)
+                print(preds[:,0,:,:].reshape([batch_size,1,img_size,img_size]).shape)
                 #print(torch.sigmoid(preds).shape)
                 
                 jaccard_acc += jaccard(labels.to('cpu'), torch.sigmoid(preds[:,0,:,:].reshape([batch_size,1,img_size,img_size]).to('cpu'))) # THIS IS THE ONE THAT STILL IS ACCUMULATION IN ONLY ONE GPU
@@ -158,10 +159,10 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
         scheduler.step()
     time_elapsed = time.time() - start_time
     print("Training Complete in {:.0f}m {:.0f}s".format(time_elapsed//60, time_elapsed % 60))
-    #print("Best Validation Accuracy: {:.4f}".format(best_acc))
+    print("Best Validation Accuracy: {:.4f}".format(best_acc))
     #este no#best_model_wts = copy.deepcopy(cust_model.state_dict())
     cust_model.load_state_dict(best_model_wts.state_dict())
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizer, nr_epochs, scheduler=scheduler)
-save_model(segm_model, name="ResNet152inter_linknet_i512_e50_b40_w2_resized_3ch_intercloud.pt")
+save_model(segm_model, name="ResNet152inter_linknet_i512_e50_b32_w2_resized_3ch_intercloud.pt")
