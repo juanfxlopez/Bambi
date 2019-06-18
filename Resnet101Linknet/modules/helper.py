@@ -11,7 +11,7 @@ def dice(y_true, y_pred):
     return (2 * (y_true * y_pred).sum() + 1e-15) / (y_true.sum() + y_pred.sum() + 1e-15)
 
 def save_model(cust_model, name="dense_segm.pt"):
-    return torch.save(cust_model.state_dict(), name)
+    return torch.save(cust_model.module.state_dict(), name)
 
 def load_model(cust_model, model_dir="dense_segm.pt", map_location_device="cpu"):
     if map_location_device == "cpu":
@@ -24,7 +24,7 @@ def load_model(cust_model, model_dir="dense_segm.pt", map_location_device="cpu")
 def save_checkpoint(model, optimizer,epoch,epoch_loss,aver_jaccard,aver_jaccard_inter):
     checkpoint = { 'Epochs': epoch,
         'model': model,
-        'state_dict': model.state_dict(),
+        'state_dict': model.module.state_dict(),
         'optimizer' : optimizer.state_dict(),
         'epoch_loss': epoch_loss,
         'aver_jaccard': aver_jaccard,
