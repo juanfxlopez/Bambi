@@ -24,7 +24,7 @@ def create_watershed(labels):
     contours = binary_dilation(contours, iterations=1)#THIS WAS 2 BEFORE
     return contours
 
-TRAIN_PATH = "../data/Datasets/CellcyteUV20X-fixed/"
+TRAIN_PATH = "../data/Datasets/CellcyteUV20X_fixed/"
 #TEST_PATH = "../"
 train_ids = get_ids_in_list(TRAIN_PATH)
 
@@ -45,7 +45,7 @@ for n, img_id in tqdm(enumerate(train_ids), total=len(train_ids)):
         img = cv2.imread(TRAIN_PATH + id_ + ".png") # in BGR by default
         img=cv2.resize(img,(1024,1024))
         im = Image.fromarray(img)
-        im.save("../data/GenDataX/TrainData/images/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
+        im.save("../data/GenData/TrainData/images/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
 
         #mask = np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8, order='C')
         #mask_original = np.zeros((img.shape[0], img.shape[1]), dtype=np.uint8, order='C')
@@ -123,10 +123,10 @@ for n, img_id in tqdm(enumerate(train_ids), total=len(train_ids)):
         mask_contourscolor=Image.fromarray(conImg_plt)
         mask_dst = Image.fromarray(dst)
         
-        mask_label.save("../data/GenDataX/TrainData/labels/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
-        mask_labelinter.save("../data/GenDataX/TrainData/labels_inter/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
-        mask_watershed.save("../data/GenDataX/TrainData/watershed/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
-        #mask_inter.save("../data/GenDataX/TrainData/intersections/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
-        #mask_contours.save("../data/GenDataX/TrainData/contours/" + str("%04d" % ((n-1)/2+ 900)) + "_.png")
-        #mask_contourscolor.save("../data/GenDataX/TrainData/contourscolor/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
-        #mask_dst.save("../data/GenDataX/TrainData/overlays/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
+        mask_label.save("../data/GenData/TrainData/labels/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
+        mask_labelinter.save("../data/GenData/TrainData/labels_inter/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
+        mask_watershed.save("../data/GenData/TrainData/watershed/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
+        #mask_inter.save("../data/GenData/TrainData/intersections/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
+        #mask_contours.save("../data/GenData/TrainData/contours/" + str("%04d" % ((n-1)/2+ 900)) + "_.png")
+        #mask_contourscolor.save("../data/GenData/TrainData/contourscolor/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
+        #mask_dst.save("../data/GenData/TrainData/overlays/" + str("%04d" % ((n-1)/2 + 900)) + "_.png")
