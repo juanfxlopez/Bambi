@@ -49,7 +49,7 @@ class Resnet152SegmModel(nn.Module):
         self.layer4 = encoder[6]#torch.Size([1, 1024, 24, 24]) -> torch.Size([1, 1024+x, 24, 24])  
         self.layer5 = encoder[7]#torch.Size([1, 2048, 12, 12])-> torch.Size([1, 2048, 12, 12])
         #self.layer6 = encoder[8]#torch.Size([1, 2048, 6, 6)  ,, used for  image with original size =256
-        self.layer6 = nn.AvgPool2d(kernel_size=9, stride=2, padding=0)#torch.Size([1, 2048, 3, 3) for image with original size =512
+        self.layer6 = nn.AvgPool2d(kernel_size=3, stride=2, padding=1)#torch.Size([1, 2048, 3, 3) for image with original size =512
 
         self.dec6 = nn.Sequential (
             UpsampleLayer(in_chnl=2048, mid_chnl=num_filters*8, out_chnl=num_filters*8),  # dec([1, 2048, 3, 3]) -> ([1, 2048, 6, 6])
