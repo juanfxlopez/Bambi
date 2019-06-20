@@ -15,9 +15,9 @@ def save_model(cust_model, name="dense_segm.pt"):
 
 def load_model(cust_model, model_dir="dense_segm.pt", map_location_device="cpu"):
     if map_location_device == "cpu":
-        cust_model.load_state_dict(torch.load(model_dir, map_location=map_location_device))
+        cust_model.module.load_state_dict(torch.load(model_dir, map_location=map_location_device))
     elif map_location_device == "gpu":
-        cust_model.load_state_dict(torch.load(model_dir))
+        cust_model.module.load_state_dict(torch.load(model_dir))
     cust_model.eval()
     return cust_model
 
@@ -48,7 +48,7 @@ def load_checkpoint(model,filepath):
         #parameter.requires_grad = False
         print (parameter.requires_grad)'''
 
-    model.load_state_dict(checkpoint['state_dict'])
+    model.module.load_state_dict(checkpoint['state_dict'])
     optimizer = optim.Adam(model.parameters(), lr = 0.0001)
     optimizer.load_state_dict(checkpoint['optimizer'])
     best_acc=checkpoint['aver_jaccard']
