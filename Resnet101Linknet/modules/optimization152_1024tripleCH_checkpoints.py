@@ -4,7 +4,7 @@ from torch import optim
 from torchvision import transforms
 
 from resnet152inter_linknet_model import ResNetLinkModel
-from helper import jaccard, dice, save_model, save_checkpoint, load_checkpoint
+from helper import jaccard, dice, save_model, save_model_module, save_checkpoint, load_checkpoint
 from dataloader_inter_contour import DatasetCells, CellTrainValidLoader
 #import encoding
 from parallel import DataParallelModel, DataParallelCriterion
