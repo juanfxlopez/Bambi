@@ -19,8 +19,8 @@ from get_data_ids import get_ids_in_list
 start_time=time.time()
 
 segm_model=ResNetLinkModel(input_channels=1,num_classes=3)
-segm_model=nn.DataParallel(segm_model) #This is for multiGPU -> cloud
-segm_model=load_model(segm_model, model_dir="./ResNet152inter_linknet_i1024_e12_b8_w1_resized_3ch_intercloud.pt")
+#segm_model=nn.DataParallel(segm_model) #This is for multiGPU -> cloud
+segm_model=load_model(segm_model, model_dir="./ResNet152inter_linknet_i1024_e12_b8_w1_resized_3ch_intercloud_mod.pt")
 
 img_size1=1024
 img_size2=1024
@@ -77,11 +77,11 @@ for img_id in tqdm(images, total=len(images)):
         substraction = binary_out1- binary_out2
         substraction = np.where(substraction>0.5,1,0)
         binary_out1 = Image.fromarray(np.uint8(binary_out1*255))
-        #binary_out1.save(prediction_path + img_id[0:-4] + "mask.png")
+        binary_out1.save(prediction_path + img_id[0:-4] + "mask.png")
         binary_out2 = Image.fromarray(np.uint8(binary_out2*255))
-        #binary_out2.save(prediction_path + img_id[0:-4] + "maskwater.png")
+        binary_out2.save(prediction_path + img_id[0:-4] + "maskwater.png")
         binary_out3 = Image.fromarray(np.uint8(binary_out3*255))
-        #binary_out3.save(prediction_path + img_id[0:-4] + "maskcontour.png")
+        binary_out3.save(prediction_path + img_id[0:-4] + "maskcontour.png")
 
         substraction = Image.fromarray(np.uint8(substraction*255))
         substraction  = substraction.resize(size=(2448, 2048))
