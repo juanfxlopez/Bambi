@@ -20,14 +20,14 @@ start_time=time.time()
 
 segm_model=ResNetLinkModel(input_channels=1,num_classes=3)
 #segm_model=nn.DataParallel(segm_model) #This is for multiGPU -> cloud
-segm_model=load_model(segm_model, model_dir="./ResNet152inter_linknet_i1024_e12_b8_w1_resized_3ch_intercloud48-09-47_mod.pt")
+segm_model=load_model(segm_model, model_dir="./ResNet152inter_linknet_i1024_e12_b8_w1_resized_3ch_intercloud48.pt")
 
 img_size1=1024
 img_size2=1024
 trf = transforms.Compose([ transforms.Resize(size=(img_size1, img_size2)), transforms.ToTensor() ])
 
 
-data_path = "../data/Datasets/CellcyteUV10X_fixed/"
+data_path = "../data/Datasets/CellcyteUV20X_fixed/"
 prediction_path = "../test/gr_predictionsinter/"
 images = get_ids_in_list(data_path)
 
@@ -64,7 +64,8 @@ for img_id in tqdm(images, total=len(images)):
         pred3 = pred3.squeeze()
         output_np3 = pred3.detach().cpu().numpy()
         #global_thresh = threshold_otsu(output_np)
-        binary_out1 = output_np1 > global_thresh
+        #binary_out1 = output_np1 > global_thresh
+        binary_out1 = np.where(output_np1 > thrs, upper, lower)
 
 
         binary_out2 = np.where(output_np2 > thrs, upper, lower)
