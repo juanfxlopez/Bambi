@@ -74,7 +74,7 @@ for img_id in tqdm(images, total=len(images)):
         #mask = Image.fromarray(binary_out)
         #mask.save(img_id + "_mask.png")
         #plt.imshow(img_id)
-        substraction = binary_out1- binary_out2
+        substraction = binary_out3- binary_out2
         substraction = np.where(substraction>0.5,1,0)
         binary_out1 = Image.fromarray(np.uint8(binary_out1*255))
         binary_out1.save(prediction_path + img_id[0:-4] + "mask.png")
