@@ -18,16 +18,16 @@ def save_model(cust_model, name="dense_segm.pt"):
 
 def load_model(cust_model, model_dir="dense_segm.pt", map_location_device="cpu"):
     if map_location_device == "cpu":
-        cust_model.module.load_state_dict(torch.load(model_dir, map_location=map_location_device))
+        cust_model.load_state_dict(torch.load(model_dir, map_location=map_location_device))
     elif map_location_device == "gpu":
-        cust_model.module.load_state_dict(torch.load(model_dir))
+        cust_model.load_state_dict(torch.load(model_dir))
     cust_model.eval()
     return cust_model
 
 def save_checkpoint(model, optimizer,epoch,epoch_loss,aver_jaccard,aver_jaccard_inter):
     checkpoint = { 'Epochs': epoch,
         'model': model,
-        'state_dict': model.module.state_dict(),
+        'state_dict': model.state_dict(),
         'optimizer' : optimizer.state_dict(),
         'epoch_loss': epoch_loss,
         'aver_jaccard': aver_jaccard,
