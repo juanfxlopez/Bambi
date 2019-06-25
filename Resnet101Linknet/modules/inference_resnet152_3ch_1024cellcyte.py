@@ -77,10 +77,13 @@ for img_id in tqdm(images, total=len(images)):
         substraction = binary_out1- binary_out2
         substraction = np.where(substraction>0.5,1,0)
         binary_out1 = Image.fromarray(np.uint8(binary_out1*255))
+        binary_out1  = binary_out1.resize(size=(2448, 2048))
         binary_out1.save(prediction_path + img_id[0:-4] + "mask.png")
         binary_out2 = Image.fromarray(np.uint8(binary_out2*255))
+        binary_out2  = binary_out2.resize(size=(2448, 2048))
         binary_out2.save(prediction_path + img_id[0:-4] + "maskwater.png")
         binary_out3 = Image.fromarray(np.uint8(binary_out3*255))
+        binary_out3  = binary_out3.resize(size=(2448, 2048))
         binary_out3.save(prediction_path + img_id[0:-4] + "maskcontour.png")
 
         substraction = Image.fromarray(np.uint8(substraction*255))
