@@ -19,7 +19,7 @@ from get_data_ids import get_ids_in_list
 start_time=time.time()
 
 segm_model=ResNetLinkModel(input_channels=1,num_classes=3)
-segm_model=nn.DataParallel(segm_model) #This is for multiGPU -> cloud
+#segm_model=nn.DataParallel(segm_model) #This is for multiGPU -> cloud
 segm_model=load_model(segm_model, model_dir="./ResNet152inter_linknet_i1024_e12_b8_w1_resized_3ch_intercloud_mod.pt")
 
 img_size1=1024
