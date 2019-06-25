@@ -37,7 +37,7 @@ lower=0
 
 for img_id in tqdm(images, total=len(images)):
     if (img_id.endswith("_mask.png")):
-        thrs=0.26
+        thrs=0.1
     else:
         img = Image.open(data_path + img_id)
         #area = (0, 0, 1024, 1024)
