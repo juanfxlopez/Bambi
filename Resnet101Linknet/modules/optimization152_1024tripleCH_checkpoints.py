@@ -23,7 +23,7 @@ args = vars(ap.parse_args())
 use_cuda = torch.cuda.is_available()
 # Hyperparameters
 batch_size = 8
-nr_epochs = 12
+nr_epochs = 20
 momentum = 0.95
 lr_rate = 0.03
 milestones = [5, 7, 8, 10, 12, 14, 16, 17, 18]
@@ -165,5 +165,5 @@ def train_model(cust_model, dataloaders, criterion, optimizer, num_epochs, sched
     return cust_model, val_acc_history
 
 segm_model, acc = train_model(segm_model, dict_loaders, criterion, optimizer, nr_epochs, scheduler=scheduler)
-save_model(segm_model, name="ResNet152inter_linknet_i1024_e12_b8_w2_resized_3ch_intercloud.pt")
-save_model_module(segm_model, name="ResNet152inter_linknet_i1024_e12_b8_w2_resized_3ch_intercloud_mod.pt")
+save_model(segm_model, name="ResNet152inter_linknet_i1024_e20_b8_w2_resized_3ch_intercloud.pt")
+save_model_module(segm_model, name="ResNet152inter_linknet_i1024_e20_b8_w2_resized_3ch_intercloud_mod.pt")
