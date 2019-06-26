@@ -51,7 +51,7 @@ def load_checkpoint(model,filepath):
         #parameter.requires_grad = False
         print (parameter.requires_grad)'''
 
-    model.module.load_state_dict(checkpoint['state_dict'])
+    model.load_state_dict(checkpoint['state_dict']) # here also module if the checkpoint is saved as module
     optimizer = optim.Adam(model.parameters(), lr = 0.0001)
     optimizer.load_state_dict(checkpoint['optimizer'])
     best_acc=checkpoint['aver_jaccard']
