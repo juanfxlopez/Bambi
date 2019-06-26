@@ -40,7 +40,7 @@ for i in tqdm(range(len(rotations)), total=len(rotations)):
         new_contour.save("../data/GenData/TrainData/labels/" + str("%04d" % j) + "_flip_" + str(i) + "_.png")
 print("Finished augmentations for rotations and cropping..")
 
-
+'''
 # Blur                          = 5
 blur = [ iaa.GaussianBlur(sigma=0.9),
     #iaa.GaussianBlur(sigma=2.9),
@@ -62,6 +62,7 @@ for i in tqdm(range(len(blur)), total=len(blur)):
         inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
         contour.save("../data/GenData/TrainData/labels/" + str("%04d" % j) + "_blur_" + str(i) + "_.png")
 print("Finished augmentations for blurring..")
+'''
 
 # Miscelaneous                  = 4
 misc = [ iaa.AdditiveGaussianNoise(scale=0.2*255),
