@@ -32,6 +32,49 @@ class UpsampleLayer(nn.Sequential):
                 nn.CELU(inplace=True)
             )
 
+class Bottleneck(nn.Module):
+    expansion = 4
+
+    def __init__(self, inplanes, planes, stride=1, downsample=None, dilation = 1 ):
+        super(Bottleneck, self).__init__()
+        self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(planes)
+
+        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=dilation, dilation = dilation, bias=False)
+        self.bn2 = nn.BatchNorm2d(planes)
+
+        self.conv3 = nn.Conv2d(planes, planes * self.expansion, kernel_size=1, bias=False)
+        self.bn3 = nn.BatchNorm2d(planes * self.expansion)
+
+        self.relu = nn.ReLU(inplace=True)
+
+        self.downsample = downsample
+        self.stride = stride
+
+    def forward(self, x):
+        residual = x
+
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out = self.relu(out)
+
+        out = self.conv3(out)
+        out = self.bn3(out)
+
+        if self.downsample is not None:
+            residual = self.downsample(x)
+
+        out += residual
+        out = self.relu(out)
+
+        return out
+
+
+
 class Resnet152SegmModel(nn.Module):
     def __init__(self, input_channels, num_filters=32, num_classes=1, pretrained=False):
         super(Resnet152SegmModel, self).__init__()
@@ -39,12 +82,21 @@ class Resnet152SegmModel(nn.Module):
         modules = list(net_model.children())[:-1]
         encoder=nn.Sequential(*modules)
         self.layer1 = nn.Sequential(
-            nn.Conv2d(in_channels = input_channels, out_channels=64, kernel_size=3, stride=2, padding=1, bias=False), # torch.Size([1, 64, 384, 384])
+            nn.Conv2d(in_channels = input_channels, out_channels=64, kernel_size=9, stride=2, padding=3, bias=False), # torch.Size([1, 64, 384, 384])
             nn.GroupNorm(num_groups=16, num_channels=64), #starting with image size: 384x384
             nn.CELU(inplace=True), #torch.Size([1, 64, 384, 384])
             encoder[3] #torch.Size([1, 64, 96, 96])
         )                             
-        self.layer2 = encoder[4]#torch.Size([1, 256, 96, 96]) 
+        #self.layer2 = encoder[4]#torch.Size([1, 256, 96, 96]) 
+        downsample = nn.Sequential(
+            nn.Conv2d(64, 256, kernel_size=(1, 1), stride=(2, 2), bias=False),
+            nn.BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        )
+        self.layer2 = nn.Sequential(
+            Bottleneck(64,64,stride=2,downsample=downsample), 
+            Bottleneck(256,64),
+            Bottleneck(256,64)
+        )
         self.layer3 = encoder[5]#torch.Size([1, 512, 48, 48]) -> torch.Size([1, 512+x, 48, 48])   
         self.layer4 = encoder[6]#torch.Size([1, 1024, 24, 24]) -> torch.Size([1, 1024+x, 24, 24])  
         self.layer5 = encoder[7]#torch.Size([1, 2048, 12, 12])-> torch.Size([1, 2048, 12, 12])
@@ -59,10 +111,11 @@ class Resnet152SegmModel(nn.Module):
         self.dec5 = UpsampleLayer(2048 + num_filters*8, num_filters*8, num_filters*8)#dec6([1,2048 + 256,12,12]) = ([1,256,24,24])
         self.dec4 = UpsampleLayer(1024 + num_filters*8, num_filters*8, num_filters*8)#dec6([1,1024 + 256,24,24]) = ([1,256,48,48])
         self.dec3 = UpsampleLayer(512 + num_filters*8, num_filters*8, num_filters*8)#dec4([1,512 + 256,48,48]) = ([1,256,96,96])
-        self.dec2 = nn.Sequential (
+        '''self.dec2 = nn.Sequential (
                     ConvEluGrNorm(256 + num_filters*8, num_filters*8), #dec2([1,64 + 256,96,96]) = ([1,256,96,96])
                     ConvEluGrNorm(num_filters*8, num_filters*2) #dec2([1,256,96,96]) = ([1,64,96,96])
-                )
+                )'''
+        self.dec2=UpsampleLayer(256+ num_filters*8, num_filters*8,num_filters*2)
         self.dec1 =  nn.Sequential (
                     UpsampleLayer(64 + num_filters*2, num_filters*2, num_filters*2),  #dec1([1,64 + 64,96,96]) = ([1,64,192,192])
                     UpsampleLayer(num_filters*2, num_filters, num_filters)         #dec1([1,64 + 64,192,192]) = ([1,32,384,384])
