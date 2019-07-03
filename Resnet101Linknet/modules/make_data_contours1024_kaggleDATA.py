@@ -21,7 +21,7 @@ def create_watershed(labels):
     mask_wl = watershed(dilated, labels, mask=dilated, watershed_line=True)
     mask_wl[mask_wl > 0] = 1
     contours = dilated - mask_wl
-    contours = binary_dilation(contours, iterations=4)#THIS WAS 2 BEFORE
+    contours = binary_dilation(contours, iterations=2)#THIS WAS 2 BEFORE
     return contours
 
 TRAIN_PATH = "../data/Datasets/Kaggle2018_fixed/"
