@@ -82,8 +82,7 @@ class Resnet152SegmModel(nn.Module):
         modules = list(net_model.children())[:-1]
         encoder=nn.Sequential(*modules)
         self.layer1 = nn.Sequential(
-            #nn.Conv2d(in_channels = input_channels, out_channels=64, kernel_size=9, stride=2, padding=3, bias=False), # torch.Size([1, 64, 384, 384])
-            encoder[0],
+            nn.Conv2d(in_channels = input_channels, out_channels=64, kernel_size=9, stride=2, padding=3, bias=False), # torch.Size([1, 64, 384, 384])
             nn.GroupNorm(num_groups=16, num_channels=64), #starting with image size: 384x384
             nn.CELU(inplace=True), #torch.Size([1, 64, 384, 384])
             encoder[3] #torch.Size([1, 64, 96, 96])
