@@ -22,7 +22,7 @@ rotations = [ iaa.Fliplr(1),
     iaa.Crop(percent=0.4)
  ]
 
-item=828
+item_start=828
 for i in tqdm(range(len(rotations)), total=len(rotations)):
     for j, sample in tqdm(enumerate(data), total=len(data)):
         img, label, inter, contour= sample
@@ -35,10 +35,11 @@ for i in tqdm(range(len(rotations)), total=len(rotations)):
         new_label = Image.fromarray(new_label)
         new_inter = Image.fromarray(new_inter)
         new_contour = Image.fromarray(new_contour)
-        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j+item) + "_flip_" + str(i) + "_.png")
-        new_label.save("../data/GenData/TrainData/labels_inter/" + str("%04d" % j+item) + "_flip_" + str(i) + "_.png")
-        new_inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j+item) + "_flip_" + str(i) + "_.png")
-        new_contour.save("../data/GenData/TrainData/labels/" + str("%04d" % j+item) + "_flip_" + str(i) + "_.png")
+        item=j+item_start
+        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % item) + "_flip_" + str(i) + "_.png")
+        new_label.save("../data/GenData/TrainData/labels_inter/" + str("%04d" % item) + "_flip_" + str(i) + "_.png")
+        new_inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % item) + "_flip_" + str(i) + "_.png")
+        new_contour.save("../data/GenData/TrainData/labels/" + str("%04d" % item) + "_flip_" + str(i) + "_.png")
 print("Finished augmentations for rotations and cropping..")
 
 
@@ -58,10 +59,11 @@ for i in tqdm(range(len(blur)), total=len(blur)):
         label = Image.fromarray(label)
         inter = Image.fromarray(inter)
         contour = Image.fromarray(contour)
-        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j+item) + "_blur_" + str(i) + "_.png")
-        label.save("../data/GenData/TrainData/labels_inter/"+ str("%04d" % j+item) + "_blur_" + str(i) + "_.png")
-        inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j+item) + "_blur_" + str(i) + "_.png")
-        contour.save("../data/GenData/TrainData/labels/" + str("%04d" % j+item) + "_blur_" + str(i) + "_.png")
+        item=j+item_start
+        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % item) + "_blur_" + str(i) + "_.png")
+        label.save("../data/GenData/TrainData/labels_inter/"+ str("%04d" % item) + "_blur_" + str(i) + "_.png")
+        inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % item) + "_blur_" + str(i) + "_.png")
+        contour.save("../data/GenData/TrainData/labels/" + str("%04d" % item) + "_blur_" + str(i) + "_.png")
 print("Finished augmentations for blurring..")
 
 
@@ -80,10 +82,11 @@ for i in tqdm(range(len(misc)), total=len(misc)):
         label = Image.fromarray(label)
         inter = Image.fromarray(inter)
         contour = Image.fromarray(contour)  
-        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j+item) + "_sharp_" + str(i) + "_.png")
-        label.save("../data/GenData/TrainData/labels_inter/"+ str("%04d" % j+item) + "_sharp_" + str(i) + "_.png")
-        inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j+item) + "_sharp_" + str(i) + "_.png")
-        contour.save("../data/GenData/TrainData/labels/" + str("%04d" % j+item) + "_sharp_" + str(i) + "_.png")
+        item=j+item_start
+        new_img.save("../data/GenData/TrainData/images/" + str("%04d" % item) + "_sharp_" + str(i) + "_.png")
+        label.save("../data/GenData/TrainData/labels_inter/"+ str("%04d" % item) + "_sharp_" + str(i) + "_.png")
+        inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % item) + "_sharp_" + str(i) + "_.png")
+        contour.save("../data/GenData/TrainData/labels/" + str("%04d" % item) + "_sharp_" + str(i) + "_.png")
 print("Finished augmentations for miscalleneous..")
 
 # Adjusting exposure            = 1
@@ -94,9 +97,10 @@ for j, sample in tqdm(enumerate(data), total=len(data)):
     new_img = Image.fromarray(new_img)
     label = Image.fromarray(label)
     inter = Image.fromarray(inter)
-    contour = Image.fromarray(contour)  
-    new_img.save("../data/GenData/TrainData/images/" + str("%04d" % j+item) + "_exposure_.png")
-    label.save("../data/GenData/TrainData/labels_inter/" + str("%04d" % j+item) + "_exposure_.png")
-    inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % j+item) + "_exposure_.png")
-    contour.save("../data/GenData/TrainData/labels/" + str("%04d" % j+item) + "_exposure_.png")
+    contour = Image.fromarray(contour) 
+    item=j+item_start 
+    new_img.save("../data/GenData/TrainData/images/" + str("%04d" % item) + "_exposure_.png")
+    label.save("../data/GenData/TrainData/labels_inter/" + str("%04d" % item) + "_exposure_.png")
+    inter.save("../data/GenData/TrainData/watershed/" + str("%04d" % item) + "_exposure_.png")
+    contour.save("../data/GenData/TrainData/labels/" + str("%04d" % item) + "_exposure_.png")
 print("Finished..")
